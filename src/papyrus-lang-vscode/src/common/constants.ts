@@ -7,3 +7,8 @@ export const extensionQualifiedId = `joelday.${extensionId}`;
 export enum GlobalState {
     PapyrusVersion = 'papyrusVersion'
 }
+export const PDSModName = "Papyrus Debug Extension";
+export const AddressLibraryF4SEModName = "Address Library for F4SE Plugins";
+export const AddressLibrarySKSEAEModName = "Address Library for SKSE Plugins (AE)";
+export const AddressLibrarySKSEModName = "Address Library for SKSE Plugins";
+
