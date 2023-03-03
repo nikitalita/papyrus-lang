@@ -413,14 +413,3 @@ export async function GetCompiledTime(path: string): Promise<number> {
     }
     return header.CompileTime;
 }
-
-// // Test the PexReader
-// let pexreader = new PexReader(
-//     'F:\\workspace\\skyrim-mod-workspace\\papyrus-lang\\src\\papyrus-lang-vscode\\_wetbpautoadjust.pex'
-// );
-
-
-// pexreader.ReadPex().then((pex) => {
-//   console.log(pex);
-//   console.log('done');
-// });
