@@ -1,6 +1,6 @@
 import { injectable, unmanaged } from 'inversify';
 import { commands, Disposable } from 'vscode';
-import { PapyrusGame, getGames } from '../../PapyrusGame';
+import { PapyrusGame, getGames } from "../../PapyrusGame";
 
 @injectable()
 export abstract class GameCommandBase<TArgs extends any[] = void[], TResult = void> implements Disposable {
