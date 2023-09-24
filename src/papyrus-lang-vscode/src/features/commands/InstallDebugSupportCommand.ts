@@ -30,7 +30,7 @@ export class InstallDebugSupportCommand extends GameCommandBase {
         @inject(IDebugSupportInstallService) installer: IDebugSupportInstallService,
         @inject(IMO2ConfiguratorService) mo2ConfiguratorService: IMO2ConfiguratorService
     ) {
-        super('installDebuggerSupport', [PapyrusGame.fallout4, PapyrusGame.skyrimSpecialEdition]);
+        super('installDebuggerSupport', [PapyrusGame.fallout4, PapyrusGame.skyrimSpecialEdition, PapyrusGame.starfield]);
 
         this._installer = installer;
         this._mo2ConfiguratorService = mo2ConfiguratorService;
@@ -57,6 +57,9 @@ export class InstallDebugSupportCommand extends GameCommandBase {
     }
 
     protected async onExecute(game: PapyrusGame, ...args: [any | undefined]) {
+        // TODO: Add starfield support
+
+        
         let launcherDescriptor = this.getLauncherDescriptor(...args);
         const installed = await window.withProgress(
             {

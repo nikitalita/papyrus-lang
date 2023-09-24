@@ -72,7 +72,7 @@ export class GameDebugConfiguratorService implements IGameDebugConfiguratorServi
         if (!inidata) {
             return GameDebugConfigurationState.gameIniMissing;
         }
-        if (!CheckIfDebuggingIsEnabledInIni(inidata)) {
+        if (!CheckIfDebuggingIsEnabledInIni(game, inidata)) {
             return GameDebugConfigurationState.debugNotEnabled;
         }
         return GameDebugConfigurationState.debugEnabled;
@@ -94,7 +94,7 @@ export class GameDebugConfiguratorService implements IGameDebugConfiguratorServi
         if (!inidata) {
             return false;
         }
-        const newinidata = TurnOnDebuggingInIni(inidata);
+        const newinidata = TurnOnDebuggingInIni(game, inidata);
         return await WriteChangesToIni(gameIniPath, newinidata);
     }
 }

@@ -13,8 +13,10 @@ import { getEnvFromProcess, getGamePIDs, getPIDforProcessName, getPIDsforFullPat
 import * as MO2Lib from '../common/MO2Lib';
 import { INIData, ParseIniFile } from '../common/INIHelpers';
 
+// TODO: Verify what the starfield calues are
+
 // ours
-export const PapyrusMO2Ids: MO2Lib.MO2LongGameID[] = ['Fallout 4', 'Skyrim Special Edition', 'Skyrim'];
+export const PapyrusMO2Ids: MO2Lib.MO2LongGameID[] = ['Fallout 4', 'Skyrim Special Edition', 'Skyrim', 'Starfield'];
 
 export function GetMO2GameID(game: PapyrusGame): MO2Lib.MO2LongGameID {
     switch (game) {
@@ -24,6 +26,8 @@ export function GetMO2GameID(game: PapyrusGame): MO2Lib.MO2LongGameID {
             return 'Skyrim Special Edition';
         case PapyrusGame.skyrim:
             return 'Skyrim';
+        case PapyrusGame.starfield:
+            return 'Starfield'
     }
 }
 
@@ -35,6 +39,8 @@ export function GetPapyrusGameFromMO2GameID(game: MO2Lib.MO2LongGameID): Papyrus
             return PapyrusGame.skyrimSpecialEdition;
         case 'Skyrim':
             return PapyrusGame.skyrim;
+        case 'Starfield':
+            return PapyrusGame.starfield;
     }
     return undefined;
 }
