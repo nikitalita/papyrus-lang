@@ -1,5 +1,5 @@
 import { interfaces, inject, injectable } from 'inversify';
-import { PapyrusGame, getGames, getDevelopmentCompilerFolderForGame } from "./PapyrusGame";
+import { PapyrusGame, getGames, getDevelopmentCompilerFolderForGame } from './PapyrusGame';
 import { IExtensionConfigProvider } from './ExtensionConfigProvider';
 import { Observable, combineLatest } from 'rxjs';
 import { map, mergeMap, shareReplay } from 'rxjs/operators';
@@ -56,12 +56,12 @@ function getDefaultPapyrusConfigForGame(game: PapyrusGame): ICreationKitPapyrusC
                 sScriptCompiledFolder,
             };
         case PapyrusGame.starfield:
-        // TODO: Starfield: verify what these are when the CK comes out
-        return {
-            sScriptSourceFolder: '.\\Data\\Scripts\\Source\\',
-            sCompilerFolder,
-            sScriptCompiledFolder,
-        };
+            // TODO: Starfield: verify what these are when the CK comes out
+            return {
+                sScriptSourceFolder: '.\\Data\\Scripts\\Source\\',
+                sCompilerFolder,
+                sScriptCompiledFolder,
+            };
     }
 }
 

@@ -1,7 +1,7 @@
 import { injectable } from 'inversify';
 import { debug, workspace } from 'vscode';
 import { IPapyrusDebugConfiguration } from '../../debugger/PapyrusDebugSession';
-import { PapyrusGame, getShortDisplayNameForGame } from "../../PapyrusGame";
+import { PapyrusGame, getShortDisplayNameForGame } from '../../PapyrusGame';
 import { GameCommandBase } from './GameCommandBase';
 
 @injectable()

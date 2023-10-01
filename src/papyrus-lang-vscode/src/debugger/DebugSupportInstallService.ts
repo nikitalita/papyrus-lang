@@ -46,19 +46,18 @@ export class DebugSupportInstallService implements IDebugSupportInstallService {
         this._configProvider = configProvider;
         this._pathResolver = pathResolver;
     }
-    private _getMMPluginInstallPath(game: PapyrusGame, modsDir: string ): string {
+    private _getMMPluginInstallPath(game: PapyrusGame, modsDir: string): string {
         return path.join(
             modsDir,
             PDSModName,
             PathResolver._getModMgrExtenderPluginRelativePath(game),
             getPluginDllName(game, false)
-        )
+        );
     }
     // TODO: Refactor this properly, right now it's just hacked to work with MO2LaunchDescriptor
     async getInstallState(game: PapyrusGame, modsDir: string | undefined): Promise<DebugSupportInstallState> {
         // TODO: Verify this is what we want to do for Starfield
-        if (game === PapyrusGame.starfield)
-            return DebugSupportInstallState.installed;
+        if (game === PapyrusGame.starfield) return DebugSupportInstallState.installed;
 
         const config = (await this._configProvider.config.pipe(take(1)).toPromise())[game];
         const client = await this._languageClientManager.getLanguageClientHost(game);

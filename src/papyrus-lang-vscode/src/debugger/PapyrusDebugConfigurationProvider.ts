@@ -36,14 +36,14 @@ export class PapyrusDebugConfigurationProvider implements DebugConfigurationProv
         _folder: WorkspaceFolder | undefined,
         _token?: CancellationToken
     ): Promise<IPapyrusDebugConfiguration[]> {
-        let PapyrusAttach = {
+        const PapyrusAttach = {
             type: 'papyrus',
             name: 'Fallout 4',
             game: PapyrusGame.fallout4,
             request: 'attach',
             projectPath: '${workspaceFolder}/fallout4.ppj',
         } as IPapyrusDebugConfiguration;
-        let PapyrusMO2Launch = {
+        const PapyrusMO2Launch = {
             type: 'papyrus',
             name: 'Fallout 4 (Launch with MO2)',
             game: PapyrusGame.fallout4,
@@ -51,10 +51,10 @@ export class PapyrusDebugConfigurationProvider implements DebugConfigurationProv
             launchType: 'MO2',
             launcherPath: 'C:/Modding/MO2/ModOrganizer.exe',
             mo2Config: {
-                shortcutURI: 'moshortcut://Fallout 4:F4SE'
+                shortcutURI: 'moshortcut://Fallout 4:F4SE',
             } as MO2Config,
         } as IPapyrusDebugConfiguration;
-        let PapyruseXSELaunch = {
+        const PapyruseXSELaunch = {
             type: 'papyrus',
             name: 'Fallout 4 (Launch with F4SE)',
             game: PapyrusGame.fallout4,
@@ -97,17 +97,17 @@ export class PapyrusDebugConfigurationProvider implements DebugConfigurationProv
     // substitute all the environment variables in the given string
     // environment variables are of the form ${env:VARIABLE_NAME}
     async substituteEnvVars(string: string): Promise<string> {
-        let envVars = string.match(/\$\{env:([^\}]+)\}/g);
+        const envVars = string.match(/\$\{env:([^\}]+)\}/g);
         if (envVars !== null) {
-            for (let envVar of envVars) {
+            for (const envVar of envVars) {
                 if (envVar === undefined || envVar === null) {
                     continue;
                 }
-                let matches = envVar?.match(/\$\{env:([^\}]+)\}/);
+                const matches = envVar?.match(/\$\{env:([^\}]+)\}/);
                 if (matches === null || matches.length < 2) {
                     continue;
                 }
-                let envVarName = matches[1];
+                const envVarName = matches[1];
                 let envVarValue: string | undefined;
 
                 switch (envVarName) {
@@ -127,7 +127,7 @@ export class PapyrusDebugConfigurationProvider implements DebugConfigurationProv
                         envVarValue = undefined;
                         break;
                 }
-                
+
                 if (envVarValue === undefined) {
                     envVarValue = '';
                 }
@@ -141,8 +141,8 @@ export class PapyrusDebugConfigurationProvider implements DebugConfigurationProv
     async prepMo2Config(launcherPath: string, mo2Config: MO2Config, game: PapyrusGame): Promise<MO2Config> {
         let instanceINI = mo2Config.instanceIniPath;
         if (!instanceINI) {
-            let { instanceName } = parseMoshortcutURI(mo2Config.shortcutURI);
-            let instanceInfo = await FindInstanceForEXE(launcherPath, instanceName);
+            const { instanceName } = parseMoshortcutURI(mo2Config.shortcutURI);
+            const instanceInfo = await FindInstanceForEXE(launcherPath, instanceName);
             if (
                 instanceInfo &&
                 GetPapyrusGameFromMO2GameID(instanceInfo.gameName) &&
@@ -151,12 +151,14 @@ export class PapyrusDebugConfigurationProvider implements DebugConfigurationProv
                 instanceINI = instanceInfo.iniPath;
             }
         } else {
-            instanceINI = mo2Config.instanceIniPath ? await this.substituteEnvVars(mo2Config.instanceIniPath) : mo2Config.instanceIniPath;
+            instanceINI = mo2Config.instanceIniPath
+                ? await this.substituteEnvVars(mo2Config.instanceIniPath)
+                : mo2Config.instanceIniPath;
         }
         return {
             shortcutURI: mo2Config.shortcutURI,
             profile: mo2Config.profile,
-            instanceIniPath: instanceINI
+            instanceIniPath: instanceINI,
         } as MO2Config;
     }
 
@@ -166,7 +168,7 @@ export class PapyrusDebugConfigurationProvider implements DebugConfigurationProv
         token?: CancellationToken
     ): Promise<IPapyrusDebugConfiguration | null | undefined> {
         if (debugConfiguration.request === 'launch' && debugConfiguration.launcherPath) {
-            let path = await this.substituteEnvVars(debugConfiguration.launcherPath);
+            const path = await this.substituteEnvVars(debugConfiguration.launcherPath);
             if (path === undefined) {
                 throw new Error('Invalid debug configuration.');
             }

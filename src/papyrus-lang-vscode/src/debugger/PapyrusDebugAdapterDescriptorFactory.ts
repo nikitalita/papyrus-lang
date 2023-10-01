@@ -18,8 +18,8 @@ import {
     getDisplayNameForGame,
     getScriptExtenderName,
     getScriptExtenderUrl,
-    getShortDisplayNameForGame
-} from "../PapyrusGame";
+    getShortDisplayNameForGame,
+} from '../PapyrusGame';
 import { ICreationKitInfoProvider } from '../CreationKitInfoProvider';
 import { IExtensionConfigProvider } from '../ExtensionConfigProvider';
 import { take } from 'rxjs/operators';
@@ -31,8 +31,17 @@ import { ILanguageClientManager } from '../server/LanguageClientManager';
 import { showGameDisabledMessage, showGameMissingMessage } from '../features/commands/InstallDebugSupportCommand';
 import { inject, injectable } from 'inversify';
 import { DebugLaunchState, IDebugLauncherService, LaunchCommand } from './DebugLauncherService';
-import { IMO2LauncherDescriptor, IMO2LaunchDescriptorFactory, MO2LaunchDescriptorFactory } from './MO2LaunchDescriptorFactory';
-import { GetErrorMessageFromStatus, IMO2ConfiguratorService, MO2ConfiguratorService, MO2LaunchConfigurationStatus } from './MO2ConfiguratorService';
+import {
+    IMO2LauncherDescriptor,
+    IMO2LaunchDescriptorFactory,
+    MO2LaunchDescriptorFactory,
+} from './MO2LaunchDescriptorFactory';
+import {
+    GetErrorMessageFromStatus,
+    IMO2ConfiguratorService,
+    MO2ConfiguratorService,
+    MO2LaunchConfigurationStatus,
+} from './MO2ConfiguratorService';
 import path from 'path';
 import * as fs from 'fs';
 import { promisify } from 'util';
@@ -53,7 +62,7 @@ export interface IDebugToolArguments {
 }
 
 function getDefaultPortForGame(game: PapyrusGame) {
-    switch(game) {
+    switch (game) {
         case PapyrusGame.fallout4:
             return 2077;
         case PapyrusGame.skyrimSpecialEdition:
@@ -63,8 +72,6 @@ function getDefaultPortForGame(game: PapyrusGame) {
     }
     return 0;
 }
-
-
 
 @injectable()
 export class PapyrusDebugAdapterDescriptorFactory implements DebugAdapterDescriptorFactory {
@@ -124,18 +131,22 @@ export class PapyrusDebugAdapterDescriptorFactory implements DebugAdapterDescrip
                 env.openExternal(Uri.parse(getScriptExtenderUrl(game)));
                 break;
         }
-        return false
+        return false;
     }
 
-    private async _ShowLaunchDebugSupportInstallMessage(game: PapyrusGame, launchType: 'MO2' | 'XSE', launcher: IMO2LauncherDescriptor) {
+    private async _ShowLaunchDebugSupportInstallMessage(
+        game: PapyrusGame,
+        launchType: 'MO2' | 'XSE',
+        launcher: IMO2LauncherDescriptor
+    ) {
         const installOption = `Fix Configuration`;
         const state = await this._MO2ConfiguratorService.getStateFromConfig(launcher);
-        if (state !== MO2LaunchConfigurationStatus.Ready){
+        if (state !== MO2LaunchConfigurationStatus.Ready) {
             const errorMessage = GetErrorMessageFromStatus(state);
             const selectedInstallOption = await window.showInformationMessage(
-                `The following configuration problems were encountered while attempting to launch ${getDisplayNameForGame(game)}:\n${
-                    errorMessage
-                }\nWould you like to fix the configuration?`,
+                `The following configuration problems were encountered while attempting to launch ${getDisplayNameForGame(
+                    game
+                )}:\n${errorMessage}\nWould you like to fix the configuration?`,
                 installOption,
                 'Cancel'
             );
@@ -149,7 +160,7 @@ export class PapyrusDebugAdapterDescriptorFactory implements DebugAdapterDescrip
                     break;
                 case 'Cancel':
                     return true;
-            }    
+            }
         }
         return false;
     }
@@ -227,56 +238,64 @@ export class PapyrusDebugAdapterDescriptorFactory implements DebugAdapterDescrip
         if (game == PapyrusGame.starfield) {
             // get the workspace folder
             // TODO: Starfield: Replace this with actual name resolution
-            let workspaceFolder = ""
-            let baseFolder = ""
-            if (workspace.workspaceFolders !== undefined){
+            let workspaceFolder = '';
+            let baseFolder = '';
+            if (workspace.workspaceFolders !== undefined) {
                 workspaceFolder = workspace.workspaceFolders[0].uri.fsPath;
-                if (workspace.workspaceFolders.length > 1){
+                if (workspace.workspaceFolders.length > 1) {
                     baseFolder = workspace.workspaceFolders[1].uri.fsPath;
                 }
             }
-            
+
             session.configuration.noop = false;
-            return new DebugAdapterInlineImplementation( 
+            return new DebugAdapterInlineImplementation(
                 new StarfieldDebugAdapterProxy({
                     port: session.configuration.port || getDefaultPortForGame(game),
-                    host: "localhost",
+                    host: 'localhost',
                     startNow: true,
                     workspaceFolder: workspaceFolder,
                     BaseScriptFolder: baseFolder,
-                    consoleLogLevel: "debug" // TODO: Turn this down in production, it can kill performance
-                }
-                )
-            )
+                    consoleLogLevel: 'debug', // TODO: Turn this down in production, it can kill performance
+                })
+            );
         }
 
         let launched = DebugLaunchState.success;
 
-        if (session.configuration.request === 'launch'){
+        if (session.configuration.request === 'launch') {
             // check if the game is running
-            if (await getGameIsRunning(game)){
-                throw new Error(`'${getDisplayNameForGame(game)}' is already running. Please close it before launching the debugger.`);
+            if (await getGameIsRunning(game)) {
+                throw new Error(
+                    `'${getDisplayNameForGame(
+                        game
+                    )}' is already running. Please close it before launching the debugger.`
+                );
             }
             // run the launcher with the args from the configuration
             // if the launcher is MO2
-            let launcherPath: string = session.configuration.launcherPath || "";
-            if (!launcherPath){
+            let launcherPath: string = session.configuration.launcherPath || '';
+            if (!launcherPath) {
                 throw new Error(`'Invalid launch configuration. Launcher path is missing.`);
             }
             launcherPath = path.normalize(launcherPath);
-            if (!launcherPath || !await exists(launcherPath)){
-                throw new Error(`'Path does not exist!`)
+            if (!launcherPath || !(await exists(launcherPath))) {
+                throw new Error(`'Path does not exist!`);
             }
-            let launcherArgs: string[] = session.configuration.args || [];
+            const launcherArgs: string[] = session.configuration.args || [];
             let LauncherCommand: LaunchCommand;
-            if(session.configuration.launchType === 'MO2') {
-                if (session.configuration.mo2Config === undefined){
+            if (session.configuration.launchType === 'MO2') {
+                if (session.configuration.mo2Config === undefined) {
                     throw new Error(`'Invalid launch configuration. MO2 configuration is missing.`);
                 }
-                let launcher = await this._MO2LaunchDescriptorFactory.createMO2LaunchDecriptor(launcherPath, launcherArgs, session.configuration.mo2Config, game);
-                let state = await this._MO2ConfiguratorService.getStateFromConfig(launcher);
+                const launcher = await this._MO2LaunchDescriptorFactory.createMO2LaunchDecriptor(
+                    launcherPath,
+                    launcherArgs,
+                    session.configuration.mo2Config,
+                    game
+                );
+                const state = await this._MO2ConfiguratorService.getStateFromConfig(launcher);
                 if (state !== MO2LaunchConfigurationStatus.Ready) {
-                    if (!await this._ShowLaunchDebugSupportInstallMessage(game, 'MO2', launcher)){
+                    if (!(await this._ShowLaunchDebugSupportInstallMessage(game, 'MO2', launcher))) {
                         session.configuration.noop = true;
                         return noopExecutable;
                     }
@@ -286,12 +305,14 @@ export class PapyrusDebugAdapterDescriptorFactory implements DebugAdapterDescrip
                 LauncherCommand = launcher.getLaunchCommand();
 
                 // If MO2 is running and the profile is not the one we want to launch, the launch will fuck up, kill it
-                if (await isMO2ButNotThisOneRunning(launcher.MO2EXEPath) || (launcher.instanceInfo.selectedProfile !== launcher.profileToLaunchData.name)){
+                if (
+                    (await isMO2ButNotThisOneRunning(launcher.MO2EXEPath)) ||
+                    launcher.instanceInfo.selectedProfile !== launcher.profileToLaunchData.name
+                ) {
                     await killAllMO2Processes();
                 }
-        
-            } else if(session.configuration.launchType === 'XSE') {
-                LauncherCommand = {command: launcherPath, args: launcherArgs};
+            } else if (session.configuration.launchType === 'XSE') {
+                LauncherCommand = { command: launcherPath, args: launcherArgs };
             } else {
                 // throw an error indicated the launch configuration is invalid
                 throw new Error(`'Invalid launch configuration.`);
@@ -300,38 +321,40 @@ export class PapyrusDebugAdapterDescriptorFactory implements DebugAdapterDescrip
             const cancellationSource = new CancellationTokenSource();
             const cancellationToken = cancellationSource.token;
             const port = session.configuration.port || getDefaultPortForGame(game);
-            let wait_message = window.setStatusBarMessage(`Waiting for ${getDisplayNameForGame(game)} to start...`, 30000);            
-            launched = await this._debugLauncher.runLauncher( LauncherCommand, game, port, cancellationToken)
+            const wait_message = window.setStatusBarMessage(
+                `Waiting for ${getDisplayNameForGame(game)} to start...`,
+                30000
+            );
+            launched = await this._debugLauncher.runLauncher(LauncherCommand, game, port, cancellationToken);
             wait_message.dispose();
         } else {
-            if (!await this._attachEnsureGameInstalled(game)){
+            if (!(await this._attachEnsureGameInstalled(game))) {
                 session.configuration.noop = true;
                 return noopExecutable;
-            }    
+            }
         }
 
-        if (launched != DebugLaunchState.success){
-            if (launched === DebugLaunchState.cancelled){
+        if (launched != DebugLaunchState.success) {
+            if (launched === DebugLaunchState.cancelled) {
                 session.configuration.noop = true;
-                return noopExecutable;    
+                return noopExecutable;
             }
-            if (launched === DebugLaunchState.multipleGamesRunning){
-                const errMessage = `Multiple ${getDisplayNameForGame(game)} instances are running, shut them down and try again.`;
+            if (launched === DebugLaunchState.multipleGamesRunning) {
+                const errMessage = `Multiple ${getDisplayNameForGame(
+                    game
+                )} instances are running, shut them down and try again.`;
                 window.showErrorMessage(errMessage);
             }
             // throw an error indicating the launch failed
             throw new Error(`'${game}' failed to launch.`);
-        // attach
-        } else if (!await this.ensureGameRunning(game)) {
+            // attach
+        } else if (!(await this.ensureGameRunning(game))) {
             session.configuration.noop = true;
             return noopExecutable;
         }
         const gConfig = await this._configProvider.config.pipe(take(1)).toPromise();
         const config = gConfig[game];
-        const creationKitInfo = await this._creationKitInfoProvider.infos
-            .get(game)!
-            .pipe(take(1))
-            .toPromise();
+        const creationKitInfo = await this._creationKitInfoProvider.infos.get(game)!.pipe(take(1)).toPromise();
 
         if (!creationKitInfo.resolvedInstallPath) {
             throw new Error(`Creation Kit install path for ${getDisplayNameForGame(game)} is not configured.`);

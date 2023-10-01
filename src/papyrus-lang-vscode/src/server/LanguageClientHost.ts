@@ -1,7 +1,7 @@
 import { Disposable, OutputChannel, window, TextDocument } from 'vscode';
 
 import { LanguageClient, ILanguageClient, IToolArguments } from './LanguageClient';
-import { PapyrusGame, getShortDisplayNameForGame, getDefaultFlagsFileNameForGame } from "../PapyrusGame";
+import { PapyrusGame, getShortDisplayNameForGame, getDefaultFlagsFileNameForGame } from '../PapyrusGame';
 import { IGameConfig } from '../ExtensionConfigProvider';
 import { Observable, BehaviorSubject, of } from 'rxjs';
 import { ICreationKitInfo } from '../CreationKitInfoProvider';

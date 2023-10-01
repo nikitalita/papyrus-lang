@@ -30,22 +30,26 @@ export class InstallDebugSupportCommand extends GameCommandBase {
         @inject(IDebugSupportInstallService) installer: IDebugSupportInstallService,
         @inject(IMO2ConfiguratorService) mo2ConfiguratorService: IMO2ConfiguratorService
     ) {
-        super('installDebuggerSupport', [PapyrusGame.fallout4, PapyrusGame.skyrimSpecialEdition, PapyrusGame.starfield]);
+        super('installDebuggerSupport', [
+            PapyrusGame.fallout4,
+            PapyrusGame.skyrimSpecialEdition,
+            PapyrusGame.starfield,
+        ]);
 
         this._installer = installer;
         this._mo2ConfiguratorService = mo2ConfiguratorService;
     }
-    
+
     // TODO: Fix the args
     protected getLauncherDescriptor(...args: [any | undefined]): IMO2LauncherDescriptor | undefined {
         // If we have args, it's a debugger launch.
         if (args.length > 0) {
             // args 0 indicates the launch type
-            let launchArgs: any[] = args[0];
+            const launchArgs: any[] = args[0];
             if (launchArgs.length < 1) {
                 return;
             }
-            let launchType = launchArgs[0] as string;
+            const launchType = launchArgs[0] as string;
             if (launchType === 'XSE') {
                 // do stuff
             }
@@ -59,8 +63,7 @@ export class InstallDebugSupportCommand extends GameCommandBase {
     protected async onExecute(game: PapyrusGame, ...args: [any | undefined]) {
         // TODO: Add starfield support
 
-        
-        let launcherDescriptor = this.getLauncherDescriptor(...args);
+        const launcherDescriptor = this.getLauncherDescriptor(...args);
         const installed = await window.withProgress(
             {
                 cancellable: true,
@@ -89,9 +92,9 @@ export class InstallDebugSupportCommand extends GameCommandBase {
                         return false;
                     }
 
-                    return launcherDescriptor ? 
-                    await this._mo2ConfiguratorService.fixDebuggerConfiguration(launcherDescriptor, token) :
-                    await this._installer.installPlugin(game, token);
+                    return launcherDescriptor
+                        ? await this._mo2ConfiguratorService.fixDebuggerConfiguration(launcherDescriptor, token)
+                        : await this._installer.installPlugin(game, token);
                 } catch (error) {
                     window.showErrorMessage(
                         `Failed to install Papyrus debugger support for ${getDisplayNameForGame(game)}: ${error}`
