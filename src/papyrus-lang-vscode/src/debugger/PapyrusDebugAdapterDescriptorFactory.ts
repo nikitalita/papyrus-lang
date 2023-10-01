@@ -158,7 +158,7 @@ export class PapyrusDebugAdapterDescriptorFactory implements DebugAdapterDescrip
         const installState = await this._debugSupportInstaller.getInstallState(game, modsDir);
 
         switch (installState) {
-            case DebugSupportInstallState.incorrectVersion:
+            case DebugSupportInstallState.incorrectVersion: {
                 const ignoreVersion = (await this._configProvider.config.pipe(take(1)).toPromise())[game]
                     .ignoreDebuggerVersion;
 
@@ -183,6 +183,7 @@ export class PapyrusDebugAdapterDescriptorFactory implements DebugAdapterDescrip
                 }
 
                 break;
+            }
             case DebugSupportInstallState.notInstalled:
                 return await this._ShowAttachDebugSupportInstallMessage(game);
             case DebugSupportInstallState.gameDisabled:
@@ -213,7 +214,7 @@ export class PapyrusDebugAdapterDescriptorFactory implements DebugAdapterDescrip
 
     async createDebugAdapterDescriptor(
         session: IPapyrusDebugSession,
-        executable: DebugAdapterExecutable
+        _executable: DebugAdapterExecutable
     ): Promise<DebugAdapterDescriptor> {
         const game = session.configuration.game;
 
@@ -333,9 +334,7 @@ export class PapyrusDebugAdapterDescriptorFactory implements DebugAdapterDescrip
             .toPromise();
 
         if (!creationKitInfo.resolvedInstallPath) {
-            throw new Error(
-                `Creation Kit install path for ${getDisplayNameForGame(game)} is not configured.`
-            );
+            throw new Error(`Creation Kit install path for ${getDisplayNameForGame(game)} is not configured.`);
         }
 
         const toolArguments: IDebugToolArguments = {

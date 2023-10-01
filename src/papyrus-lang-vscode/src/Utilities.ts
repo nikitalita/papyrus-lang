@@ -7,9 +7,7 @@ import procList from 'ps-list';
 
 import { getExecutableNameForGame, PapyrusGame } from "./PapyrusGame";
 
-import {
-    isNativeError,
-} from "util/types";
+import { isNativeError } from 'util/types';
 
 import {
     getSystemErrorMap
@@ -86,6 +84,7 @@ export function inDevelopmentEnvironment() {
     return process.execArgv.some((arg) => arg.startsWith('--inspect-brk'));
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function toCommandLineArgs(obj: any): string[] {
     return ([] as string[]).concat(
         ...Object.keys(obj).map((key) => {
@@ -112,7 +111,10 @@ export async function mkdirIfNeeded(pathname: string) {
 
 export function isNodeError(obj: unknown): obj is NodeJS.ErrnoException {
     if (isNativeError(obj)) {
-        if ((obj as NodeJS.ErrnoException).errno !== undefined && getSystemErrorMap().has((obj as NodeJS.ErrnoException)!.errno!)) {
+        if (
+            (obj as NodeJS.ErrnoException).errno !== undefined &&
+            getSystemErrorMap().has((obj as NodeJS.ErrnoException)!.errno!)
+        ) {
             return true;
         }
     }
@@ -133,17 +135,19 @@ export function mkDirByPathSync(targetDir: string, { isRelativeToScript = false 
             fs.mkdirSync(curDir);
         } catch (err) {
             if (isNodeError(err)) {
-                if (err.code === 'EEXIST') { // curDir already exists!
+                if (err.code === 'EEXIST') {
+                    // curDir already exists!
                     return curDir;
                 }
 
                 // To avoid `EISDIR` error on Mac and `EACCES`-->`ENOENT` and `EPERM` on Windows.
-                if (err.code === 'ENOENT') { // Throw the original parentDir error on curDir `ENOENT` failure.
+                if (err.code === 'ENOENT') {
+                    // Throw the original parentDir error on curDir `ENOENT` failure.
                     throw new Error(`EACCES: permission denied, mkdir '${parentDir}'`);
                 }
 
                 const caughtErr = !err.code || ['EACCES', 'EPERM', 'EISDIR'].indexOf(err.code) > -1;
-                if (!caughtErr || caughtErr && curDir === path.resolve(targetDir)) {
+                if (!caughtErr || (caughtErr && curDir === path.resolve(targetDir))) {
                     throw err; // Throw if it's just the last created dir.
                 }
             }
@@ -156,8 +160,8 @@ export function mkDirByPathSync(targetDir: string, { isRelativeToScript = false 
 // This will replace tokens of the form ${KEY_NAME} with values from an object { 'KEY_NAME': "replacement string" }
 export async function copyAndFillTemplate(srcPath: string, dstPath: string, values: { [key: string]: string }) {
     let templStr = (await readFile(srcPath)).toString();
-    for (let key in values) {
-        templStr = templStr.replace("${" + key + "}", values[key]);
+    for (const key in values) {
+        templStr = templStr.replace('${' + key + '}', values[key]);
     }
     return writeFile(dstPath, templStr);
 }

@@ -33,9 +33,8 @@ export class PapyrusDebugConfigurationProvider implements DebugConfigurationProv
     }
 
     async provideDebugConfigurations(
-        folder: WorkspaceFolder | undefined,
-        token?: CancellationToken
-        // TODO: FIX THIS
+        _folder: WorkspaceFolder | undefined,
+        _token?: CancellationToken
     ): Promise<IPapyrusDebugConfiguration[]> {
         let PapyrusAttach = {
             type: 'papyrus',
