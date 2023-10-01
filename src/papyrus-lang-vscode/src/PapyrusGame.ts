@@ -179,14 +179,22 @@ export function GetUserGameFolderName(game: PapyrusGame, variant: GameVariant) {
                     return 'Skyrim Special Edition GOG';
                 case GameVariant.Epic:
                     return 'Skyrim Special Edition EPIC';
+                default:
+                    break;
             }
+            break;
         case PapyrusGame.starfield:
             switch (variant) {
                 case GameVariant.Steam:
                     return 'Starfield';
                 case GameVariant.GamePass: // TODO: Starfield: verify what this is
                     return 'Starfield';
+                default:
+                    break;
             }
+            break;
+        default:
+            break;
     }
     return '';
 }

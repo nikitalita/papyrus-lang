@@ -1,11 +1,6 @@
-import { exists, existsSync } from 'fs';
-import path, { normalize } from 'path';
-import {
-    getExecutableNameForGame,
-    getGameIniName,
-    getScriptExtenderExecutableName,
-    getScriptExtenderName,
-} from '../PapyrusGame';
+import { existsSync } from 'fs';
+import path from 'path';
+import { getGameIniName } from '../PapyrusGame';
 import { PapyrusGame } from '../PapyrusGame';
 import { PDSModName } from '../common/constants';
 import { DetermineGameVariant, FindUserGamePath, getAddressLibNames } from '../common/GameHelpers';

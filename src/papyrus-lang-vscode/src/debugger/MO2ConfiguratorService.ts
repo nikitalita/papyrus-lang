@@ -2,22 +2,13 @@ import { inject, injectable, interfaces } from 'inversify';
 import { IExtensionConfigProvider } from '../ExtensionConfigProvider';
 import { take } from 'rxjs/operators';
 import { IPathResolver } from '../common/PathResolver';
-import { PapyrusGame, getGameIniName } from '../PapyrusGame';
+import { PapyrusGame } from '../PapyrusGame';
 import { ILanguageClientManager } from '../server/LanguageClientManager';
-import { ClientHostStatus } from '../server/LanguageClientHost';
-import { getPIDsforFullPath, mkdirIfNeeded } from '../Utilities';
-
-import * as path from 'path';
-import * as fs from 'fs';
-import { promisify } from 'util';
-
-import md5File from 'md5-file';
-import { PDSModName } from '../common/constants';
 import { IDebugSupportInstallService, DebugSupportInstallState } from './DebugSupportInstallService';
 import { IAddressLibraryInstallService, AddressLibInstalledState } from './AddressLibInstallService';
 import { MO2LauncherDescriptor } from './MO2LaunchDescriptorFactory';
 import { CheckIfDebuggingIsEnabledInIni, TurnOnDebuggingInIni } from '../common/GameHelpers';
-import { WriteChangesToIni, ParseIniFile } from '../common/INIHelpers';
+import { ParseIniFile } from '../common/INIHelpers';
 import {
     AddRequiredModsToModList,
     checkAddressLibrariesExistAndEnabled,
@@ -29,13 +20,7 @@ import {
 import * as MO2Lib from '../common/MO2Lib';
 import { CancellationTokenSource } from 'vscode-languageclient';
 import { CancellationToken } from 'vscode';
-import { execFile as _execFile, spawn } from 'child_process';
-import { mkdir } from 'fs/promises';
-import { AddSeparatorToBeginningOfModList } from '../common/MO2Lib';
-const execFile = promisify(_execFile);
-const exists = promisify(fs.exists);
-const copyFile = promisify(fs.copyFile);
-const removeFile = promisify(fs.unlink);
+import { spawn } from 'child_process';
 
 export enum MO2LaunchConfigurationStatus {
     Ready = 0,
@@ -204,7 +189,6 @@ export class MO2ConfiguratorService implements IMO2ConfiguratorService {
         if (!modList) {
             return MO2LaunchConfigurationStatus.ModListNotParsable;
         }
-        const ret: MO2LaunchConfigurationStatus = MO2LaunchConfigurationStatus.Ready;
         if (!checkPDSModExistsAndEnabled(modList)) {
             return MO2LaunchConfigurationStatus.PDSModNotEnabledInModList;
         }
@@ -275,7 +259,7 @@ export class MO2ConfiguratorService implements IMO2ConfiguratorService {
                     }
                     break;
                 case MO2LaunchConfigurationStatus.PDSModNotEnabledInModList:
-                case MO2LaunchConfigurationStatus.AddressLibraryModNotEnabledInModList:
+                case MO2LaunchConfigurationStatus.AddressLibraryModNotEnabledInModList: {
                     let wasRunning = false;
                     // if MO2 is running, we have to force a refresh after we add the mods, or it will overwrite our changes
                     if (await isMO2Running()) {
@@ -312,7 +296,8 @@ export class MO2ConfiguratorService implements IMO2ConfiguratorService {
                         ).unref();
                     }
                     break;
-                case MO2LaunchConfigurationStatus.IniNotConfigured:
+                }
+                case MO2LaunchConfigurationStatus.IniNotConfigured: {
                     const gameIniPath = launchDescriptor.profileToLaunchData.gameIniPath;
                     const gameIni = await ParseIniFile(gameIniPath);
                     if (!gameIni) {
@@ -322,6 +307,7 @@ export class MO2ConfiguratorService implements IMO2ConfiguratorService {
                         return false;
                     }
                     break;
+                }
                 default:
                     // shouldn't reach here
                     throw new Error(`Unknown state in fixDebuggerConfiguration`);

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Parser } from 'binary-parser';
 import * as fs from 'fs';
 import { PapyrusGame } from '../PapyrusGame';
@@ -127,6 +128,7 @@ export interface DebugInfo {
 }
 
 // TODO: maybe implement this
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 class PexIndexedString {
     public readonly index: number;
     public readonly str: string;
@@ -361,7 +363,7 @@ export class PexReader {
             .nest('UserName', this._strNest)
             .nest('ComputerName', this._strNest);
 
-    private readonly _HeaderNest = (endianness: 'little' | 'big') => {
+    private readonly _HeaderNest = () => {
         return {
             type: this.HeaderParser(),
             formatter: (x: any): PexHeader => {
@@ -385,7 +387,7 @@ export class PexReader {
         }
         const Pex = new Parser()
             .endianess(endianness)
-            .nest('Header', this._HeaderNest(endianness))
+            .nest('Header', this._HeaderNest())
             .nest('StringTable', this._strTableNest)
             .nest('DebugInfo', this._debugInfoNest)
             .parse(buffer);
@@ -398,7 +400,7 @@ export class PexReader {
     }
 
     private ReadHeader(buffer: Buffer) {
-        return new Parser().endianess(this.endianness).nest('Header', this._HeaderNest(this.endianness)).parse(buffer);
+        return new Parser().endianess(this.endianness).nest('Header', this._HeaderNest()).parse(buffer);
     }
 
     public async ReadPexHeader(): Promise<PexHeader | undefined> {

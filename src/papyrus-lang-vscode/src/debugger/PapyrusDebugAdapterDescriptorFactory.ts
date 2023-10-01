@@ -9,7 +9,6 @@ import {
     Uri,
     env,
     CancellationTokenSource,
-    DebugAdapterServer,
     DebugAdapterInlineImplementation,
     workspace,
 } from 'vscode';
@@ -31,21 +30,16 @@ import { ILanguageClientManager } from '../server/LanguageClientManager';
 import { showGameDisabledMessage, showGameMissingMessage } from '../features/commands/InstallDebugSupportCommand';
 import { inject, injectable } from 'inversify';
 import { DebugLaunchState, IDebugLauncherService, LaunchCommand } from './DebugLauncherService';
-import {
-    IMO2LauncherDescriptor,
-    IMO2LaunchDescriptorFactory,
-    MO2LaunchDescriptorFactory,
-} from './MO2LaunchDescriptorFactory';
+import { IMO2LauncherDescriptor, IMO2LaunchDescriptorFactory } from './MO2LaunchDescriptorFactory';
 import {
     GetErrorMessageFromStatus,
     IMO2ConfiguratorService,
-    MO2ConfiguratorService,
     MO2LaunchConfigurationStatus,
 } from './MO2ConfiguratorService';
 import path from 'path';
 import * as fs from 'fs';
 import { promisify } from 'util';
-import { isMO2ButNotThisOneRunning, isMO2Running, isOurMO2Running, killAllMO2Processes } from './MO2Helpers';
+import { isMO2ButNotThisOneRunning, killAllMO2Processes } from './MO2Helpers';
 import { StarfieldDebugAdapterProxy } from './starfield/StarfieldDebugAdapterProxy';
 const exists = promisify(fs.exists);
 

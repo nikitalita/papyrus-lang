@@ -1,15 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { inject, injectable } from 'inversify';
-import {
-    DebugAdapterTrackerFactory,
-    DebugSession,
-    DebugAdapterTracker,
-    window,
-    Disposable,
-    debug,
-    DebugProtocolMessage,
-} from 'vscode';
+import { DebugAdapterTrackerFactory, DebugSession, DebugAdapterTracker, window, Disposable, debug } from 'vscode';
 import { IDebugLauncherService } from './DebugLauncherService';
-import { IExtensionContext } from '../common/vscode/IocDecorators';
 @injectable()
 export class PapyrusDebugAdapterTrackerFactory implements DebugAdapterTrackerFactory, Disposable {
     private readonly _debugLauncher: IDebugLauncherService;
@@ -56,8 +48,8 @@ export class PapyrusDebugAdapterTracker implements DebugAdapterTracker {
     }
 
     // TODO: Starfield: TURN THIS BACK OFF
-    onWillReceiveMessage(message: any) {}
-    onDidSendMessage(message: any) {}
+    onWillReceiveMessage(_message: any) {}
+    onDidSendMessage(_message: any) {}
 
     onExit(code: number | undefined, signal: string | undefined) {
         this._debugLauncher.tearDownAfterDebug();

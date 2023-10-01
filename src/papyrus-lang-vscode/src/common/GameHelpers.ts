@@ -18,7 +18,6 @@ import {
 } from './constants';
 import { INIData } from './INIHelpers';
 import { getHomeFolder, getRegistryValueData } from './OSHelpers';
-import { get } from 'http';
 
 const exists = promisify(fs.exists);
 const readdir = promisify(fs.readdir);
@@ -209,6 +208,7 @@ export async function FindGamePath(game: PapyrusGame) {
             if (path) {
                 return path;
             }
+            break;
         }
         default:
             break;

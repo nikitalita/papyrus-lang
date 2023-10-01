@@ -1,13 +1,6 @@
+/* eslint-disable no-useless-escape */
 import { inject, injectable } from 'inversify';
-import {
-    ProviderResult,
-    DebugConfigurationProvider,
-    CancellationToken,
-    WorkspaceFolder,
-    debug,
-    Disposable,
-    DebugConfiguration,
-} from 'vscode';
+import { DebugConfigurationProvider, CancellationToken, WorkspaceFolder, debug, Disposable } from 'vscode';
 import { IPathResolver } from '../common/PathResolver';
 import { PapyrusGame } from '../PapyrusGame';
 import { GetPapyrusGameFromMO2GameID } from './MO2Helpers';
@@ -67,9 +60,9 @@ export class PapyrusDebugConfigurationProvider implements DebugConfigurationProv
     }
 
     async resolveDebugConfiguration(
-        folder: WorkspaceFolder | undefined,
+        _folder: WorkspaceFolder | undefined,
         debugConfiguration: IPapyrusDebugConfiguration,
-        token?: CancellationToken
+        _token?: CancellationToken
     ): Promise<IPapyrusDebugConfiguration | null | undefined> {
         if (debugConfiguration.game !== undefined && debugConfiguration.request !== undefined) {
             if (debugConfiguration.request === 'launch') {
@@ -163,9 +156,9 @@ export class PapyrusDebugConfigurationProvider implements DebugConfigurationProv
     }
 
     async resolveDebugConfigurationWithSubstitutedVariables(
-        folder: WorkspaceFolder | undefined,
+        _folder: WorkspaceFolder | undefined,
         debugConfiguration: IPapyrusDebugConfiguration,
-        token?: CancellationToken
+        _token?: CancellationToken
     ): Promise<IPapyrusDebugConfiguration | null | undefined> {
         if (debugConfiguration.request === 'launch' && debugConfiguration.launcherPath) {
             const path = await this.substituteEnvVars(debugConfiguration.launcherPath);

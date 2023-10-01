@@ -1,3 +1,7 @@
+/* eslint-disable no-constant-condition */
+/* eslint-disable no-control-regex */
+/* eslint-disable no-prototype-builtins */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 process.env.FORCE_COLOR = '2';
 
 import { DebugProtocol as DAP } from '@vscode/debugprotocol';
@@ -39,8 +43,7 @@ class Emitter<T> {
                 this._listener = listener;
                 this._this = thisArg;
 
-                let result: IDisposable;
-                result = {
+                const result: IDisposable = {
                     dispose: () => {
                         this._listener = undefined;
                         this._this = undefined;
@@ -56,7 +59,9 @@ class Emitter<T> {
         if (this._listener) {
             try {
                 this._listener.call(this._this, event);
-            } catch (e) {}
+            } catch (e) {
+                /* empty */
+            }
         }
     }
 

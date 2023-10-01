@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { existsSync, openSync, readdirSync, readFileSync, writeFileSync } from 'fs';
 import * as fs from 'fs';
 import path from 'path';
-import { INIData, ParseIniArray, ParseIniFile, SerializeIniArray, WriteChangesToIni } from './INIHelpers';
+import { INIData, ParseIniArray, ParseIniFile, SerializeIniArray } from './INIHelpers';
 import { getLocalAppDataFolder, getRegistryValueData } from './OSHelpers';
 
 export enum ModEnabledState {
@@ -68,7 +69,6 @@ export interface MO2InstanceInfo {
 // import a library that deals with nukpg version strings
 
 // import the semver library
-import * as semver from 'semver';
 
 export interface WinVerObject {
     major: number;
@@ -406,7 +406,7 @@ function ParseInstanceINI(iniPath: string, iniData: INIData, isPortable: boolean
         return undefined;
     }
     // TODO: We should probably pin to a specific minor version of MO2
-    const version = iniData.General['version'];
+    // const _version = iniData.General['version'];
 
     // TODO: Figure out if this is ever not set
     const selectedProfile = _normInistr(iniData.General['selected_profile']) || 'Default';
@@ -910,7 +910,7 @@ export function ParseMO2CmdLineArguments(normargstring: string) {
  * - [installedFiles].size
  */
 
-export function isKeyOfObject<T extends Object>(key: string | number | symbol, obj: T): key is keyof T {
+export function isKeyOfObject<T extends object>(key: string | number | symbol, obj: T): key is keyof T {
     return key in obj;
 }
 

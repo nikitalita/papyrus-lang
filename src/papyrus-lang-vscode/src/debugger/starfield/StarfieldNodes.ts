@@ -221,48 +221,6 @@ export class VariableNode implements IVariableNode {
     reflectionInfo?: SFDAP.Root;
 
     public static parseOutReflectionInfo(valueStr: string) {
-        /**
-         * Values for compound variables are returned like this:
-         *
-         * [{FormClass} <{reflection_data}>]
-         *
-         * the reflection_data is a short string that follows the following formats:
-         *  form:
-         *    %s (%08X)
-         *    <nullptr form> (%08X)
-         * //example: [Armor <Clothes_Miner_UtilitySuit (0001D1E7)>]
-         *
-         *  topicinfo - doesn't look like you can get this via the debugger
-         *    topic info %08X on <nullptr quest>
-         *    topic info %08X on quest %s (%08X)
-         *
-         *  alias:
-         *    alias %s on quest %s (%08X)
-         *    alias %s on <nullptr quest> (%08X)
-         *    <nullptr alias> (%hu) on %squest %s (%08X)
-         *    <nullptr alias> (%hu) on <nullptr quest> (%08X)
-         *  example: [mq101playeraliasscript <alias Player on quest MQ101 (00003448)>]
-         *
-         *  inventoryItem:
-         *    Item %hu in <nullptr container> (%08X)
-         *    Item %hu in container %s (%08X)
-         *  example: [Weapon <Item 21 in container Thing (00000014)>]
-         *
-         *  activeEffect:
-         *    Active effect %hu on <nullptr actor> (%08X)
-         *    Active effect %hu on %s (%08X)
-         *  example: [MagicEffect <Active effect 1 on Actor (00005251)>]
-         *
-         *  inputEnableLayer:
-         *    Input enable layer <no name> (%08X)
-         *    Input enable layer %s (%08X)
-         *    Invalid input enable layer (%08X)
-         *  example: [InputEvent <Input enable layer 1 on Player (00000007)>]
-         *
-         */
-
-        const valueTypes = {};
-        const value = valueStr; //v yes that space is supposed to be there
         const re = /\[([\w\d_]+) <(.*)? \(([A-F\d]{8})\)>\]/g;
         const match = re.exec(valueStr);
         if (match?.length == 4) {
@@ -317,7 +275,6 @@ export class VariableNode implements IVariableNode {
                     },
                 };
             } else if (reflectionInfo.startsWith('Input enable layer ')) {
-                const parts = reflectionInfo.replace('Input enable layer ', '').split(' on ');
                 return {
                     baseForm: baseForm,
                     root: {

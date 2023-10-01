@@ -4,21 +4,8 @@ import { CancellationToken, CancellationTokenSource, window } from 'vscode';
 import { IPathResolver } from '../common/PathResolver';
 import { PapyrusGame } from '../PapyrusGame';
 import { ILanguageClientManager } from '../server/LanguageClientManager';
-import { getGameIsRunning, getGamePIDs, mkdirIfNeeded } from '../Utilities';
-
-import * as path from 'path';
-import * as fs from 'fs';
-import { promisify } from 'util';
-
-import md5File from 'md5-file';
+import { getGameIsRunning, getGamePIDs } from '../Utilities';
 import { ChildProcess, spawn } from 'node:child_process';
-import { timer } from 'rxjs';
-import { execFile as _execFile } from 'child_process';
-const execFile = promisify(_execFile);
-
-const exists = promisify(fs.exists);
-const copyFile = promisify(fs.copyFile);
-const removeFile = promisify(fs.unlink);
 
 export enum DebugLaunchState {
     success,

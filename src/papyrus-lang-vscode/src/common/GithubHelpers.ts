@@ -1,12 +1,11 @@
 import { getReleases } from '@terascope/fetch-github-release/dist/src/getReleases';
-import { GithubRelease, GithubReleaseAsset } from '@terascope/fetch-github-release/dist/src/interfaces';
+import { GithubRelease } from '@terascope/fetch-github-release/dist/src/interfaces';
 import { downloadRelease } from '@terascope/fetch-github-release/dist/src/downloadRelease';
 import { getLatest } from '@terascope/fetch-github-release/dist/src/getLatest';
 import * as fs from 'fs';
 import { promisify } from 'util';
 import { CheckHashFile } from '../Utilities';
 
-const readdir = promisify(fs.readdir);
 const exists = promisify(fs.exists);
 export enum DownloadResult {
     success,

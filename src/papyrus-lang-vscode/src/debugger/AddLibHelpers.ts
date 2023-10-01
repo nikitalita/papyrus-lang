@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { GithubRelease } from '@terascope/fetch-github-release/dist/src/interfaces';
 import { AddressLibAssetSuffix, AddressLibraryName } from '../common/constants';
 import { getAddressLibNameFromAssetSuffix, getAddressLibNames, getAsssetLibraryDLSuffix } from '../common/GameHelpers';

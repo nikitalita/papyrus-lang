@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { IDebugSupportInstallService, DebugSupportInstallState } from '../../debugger/DebugSupportInstallService';
 import { window, ProgressLocation } from 'vscode';
 import { PapyrusGame, getDisplayNameForGame } from '../../PapyrusGame';
@@ -5,7 +6,7 @@ import { GameCommandBase } from './GameCommandBase';
 import { getGameIsRunning } from '../../Utilities';
 import { waitWhile } from '../../VsCodeUtilities';
 import { inject, injectable } from 'inversify';
-import { IMO2ConfiguratorService, MO2ConfiguratorService } from '../../debugger/MO2ConfiguratorService';
+import { IMO2ConfiguratorService } from '../../debugger/MO2ConfiguratorService';
 import { IMO2LauncherDescriptor } from '../../debugger/MO2LaunchDescriptorFactory';
 
 export function showGameDisabledMessage(game: PapyrusGame) {

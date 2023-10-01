@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Token, TokenType } from './types';
 
 interface TokenRegexMap {
